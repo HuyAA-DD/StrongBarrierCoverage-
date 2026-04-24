@@ -1,9 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-fileData = "./dataset/50_1.txt"
+fileData = "./dataset/100_1.txt"
 x_corr = np.loadtxt(fileData, dtype=int)
 N = len(x_corr)
+N = 2
 
 k = 2
 alpha = 0.7

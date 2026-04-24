@@ -24,10 +24,10 @@ def is_pareto_efficient(costs):
 for dataset in datasets:
     for i in range(0, 10):
         file_paths_moead = glob.glob(
-            f"./result/pareto/moead/{dataset}/moead_{dataset}_{i}*.csv"
+            f"./result/pareto/moead/moead_{dataset}_{i}*.csv"
         )
         file_paths_nsga = glob.glob(
-            f"./result/pareto/nsga/{dataset}/nsga_{dataset}_{i}*.csv"
+            f"./result/pareto/nsga/nsga_{dataset}_{i}*.csv"
         )
         file_paths = file_paths_moead + file_paths_nsga
         print("Found files:", file_paths)

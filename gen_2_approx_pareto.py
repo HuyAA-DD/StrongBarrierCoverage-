@@ -26,7 +26,7 @@ for i in range(0, 10):
     for dataset in datasets:
         for algo in algos:
             file_paths = glob.glob(
-                f"./result/pareto/{algo}/{dataset}/{algo}_{dataset}_{i}*.csv"
+                f"./result/pareto/{algo}/{algo}_{dataset}_{i}*.csv"
             )
 
             all_points = []

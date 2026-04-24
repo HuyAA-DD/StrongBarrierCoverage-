@@ -41,8 +41,8 @@ for idx, dataset in enumerate(datasets):
         normalized_true_pareto_front = normalize(true_pareto_front, min_vals, max_vals)
 
         for run in range(run_start, run_end):
-            moead_pareto_front = load_data(f"{base_link}/moead/{dataset}/moead_{dataset}_{i}_{run}.csv")
-            nsga_pareto_front = load_data(f"{base_link}/nsga/{dataset}/nsga_{dataset}_{i}_{run}.csv")
+            moead_pareto_front = load_data(f"{base_link}/moead/moead_{dataset}_{i}_{run}.csv")
+            nsga_pareto_front = load_data(f"{base_link}/nsga/nsga_{dataset}_{i}_{run}.csv")
 
             normalized_moead_pareto_front = normalize(moead_pareto_front, min_vals, max_vals)
             normalized_nsga_pareto_front = normalize(nsga_pareto_front, min_vals, max_vals)

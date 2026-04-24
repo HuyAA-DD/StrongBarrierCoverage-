@@ -3,6 +3,7 @@ import math
 import time
 import random
 import numpy as np
+import os # thêm 
 
 if len(sys.argv) > 1:
     dataset = sys.argv[1]
@@ -16,8 +17,8 @@ x_corr = np.loadtxt(input_file, dtype=int)
 num_sensor = len(x_corr)
 
 inf = 99999
-pop_size = 32
-max_gen = 10000
+pop_size = 32 
+max_gen = 10000 # Gốc là 10000
 p_mutation = 0.3
 neighbor_size = 6
 k = 2
@@ -27,15 +28,15 @@ gamma = 0.5
 barrier_length = 1000
 
 run_start = 0
-run_end = 10
+run_end = 10 # gốc là 10
 
-lamb = []
-z = [None, None]
-z_nad = [None, None]
+lamb = [] # lưu trữ các bài toán con 
+z = [None, None] # z lí tưởng 
+z_nad = [None, None] # z tệ nhất 
 
 
-def init_lambda(pop_size):
-    step = 1 / (pop_size + 1)
+def init_lambda(pop_size): # khởi tạo cá bài toán con 
+    step = 1 / (pop_size + 1) # chia trọng số đảm bảo phân phối đều 
     for i in range(1, pop_size + 1):
         a = i * step
         b = 1 - a
@@ -46,15 +47,15 @@ init_lambda(pop_size)
 
 
 def search_neighbor():
-    lamb_array = np.array(lamb)
+    lamb_array = np.array(lamb) # mảng pop_size * pop_size 
     distances = np.sqrt(
-        ((lamb_array[:, np.newaxis, :] - lamb_array[np.newaxis, :, :]) ** 2).sum(axis=2)
+        ((lamb_array[:, np.newaxis, :] - lamb_array[np.newaxis, :, :]) ** 2).sum(axis=2) #khoảng cách Euclid giữa 2 bài toán 
     )
 
-    np.fill_diagonal(distances, np.inf)
+    np.fill_diagonal(distances, np.inf) # fill đường chéo = vô cùng 
 
     neighbors = [
-        np.argsort(distances[i])[:neighbor_size].tolist() for i in range(pop_size)
+        np.argsort(distances[i])[:neighbor_size].tolist() for i in range(pop_size) # Sắp xếp theo hàng xóm gần nhất 
     ]
 
     return neighbors
@@ -212,7 +213,7 @@ def calc_fitness(f1, f2, z, z_nad, lamb_i):
     return fitness
 
 
-class Individual:
+class Individual: # Lớp biểu diễn cá thể 
     def __init__(self):
         self.f1 = None  # number of active sensor
         self.f2 = None  # total energy consumption
@@ -220,21 +221,27 @@ class Individual:
         self.gene = None  # [1, 0, 1, 1, 0]
 
 
-def init_population(pop_size):
+def init_population(pop_size): #khởi tạo quần thể 
     population = []
     for _ in range(pop_size):
         individual = Individual()
-        individual.gene = [random.randint(0, 1) for _ in range(num_sensor)]
+        individual.gene = [random.randint(0, 1) for _ in range(num_sensor)] 
         while sum(individual.gene) == 0:
             individual.gene = [random.randint(0, 1) for _ in range(num_sensor)]
-        individual.f1, individual.f2 = evaluate(individual.gene)[:2]
+        individual.f1, individual.f2 = evaluate(individual.gene)[:2]  
         population.append(individual)
     return population
 
 
 def main():
     for run in range(run_start, run_end, 1):
-        print("moead run", run)
+        
+        path = f"./result/r/moead/moead_{dataset}_{run}.txt" #lấy đường dẫn
+        if os.path.exists(path): #Bỏ qua dataset đã chạy rồi
+            print("Skip", dataset, run)
+            continue
+
+        print("-moead run", run)
         time_start = time.time()
 
         archive_f = []
@@ -283,7 +290,7 @@ def main():
             z_nad[0] = max(ind.f1 for ind in population)
             z_nad[1] = max(ind.f2 for ind in population)
 
-            archive_f.extend([[ind.f1, ind.f2] for ind in population])
+            archive_f.extend([[ind.f1, ind.f2] for ind in population]) #archive f nhét lần lượt các cá thể của từng thế hệ vào 
 
         with open(f"./result/r/moead/moead_{dataset}_{run}.txt", "w") as file:
             pass
@@ -291,23 +298,23 @@ def main():
         for ind in population:
             r = radius_formalize(ind.gene)
             with open(f"./result/r/moead/moead_{dataset}_{run}.txt", "a") as file:
-                file.write(f"{r}\n")
+                file.write(f"{r}\n") #bán kính của từng sensor trong pareto cuối cùng 
 
         with open(f"./result/f/moead/moead_{dataset}_{run}.csv", "w") as file:
             file.write(
-                f"{max([pair[0] for pair in archive_f])} {max(pair[1] for pair in archive_f)}\n"
+                f"{max([pair[0] for pair in archive_f])} {max(pair[1] for pair in archive_f)}\n" #nadir point
             )
             for item in archive_f:
-                file.write(f"{item[0]} {item[1]}\n")
+                file.write(f"{item[0]} {item[1]}\n") #vẽ phân bố pareto qua các thế hệ
 
         with open("./result/moead_time.csv", "a") as file:
             file.write(
-                f"{pop_size}, {max_gen}, {dataset}, {run}, {time.time() - time_start}\n"
+                f"{pop_size}, {max_gen}, {dataset}, {run}, {time.time() - time_start}\n" #thời gian chạy với các tham số 
             )
 
         with open(f"./result/pareto/moead/moead_{dataset}_{run}.csv", "w") as file:
             for ind in population:
-                file.write(f"{ind.f1}, {ind.f2}\n")
+                file.write(f"{ind.f1}, {ind.f2}\n") #biên pareto cuối 
 
 
 if __name__ == "__main__":

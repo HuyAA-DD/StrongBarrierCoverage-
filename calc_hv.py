@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 
 pop_size = 32
 max_generation = 10000
-dts = 250
-datasets = [f"{dts}_{i}" for i in range(10)]
+dts = 200 #gốc là 250
+datasets = [f"{dts}_{i}" for i in range(10)] #gốc là range 10
 num_runs = 10
 
 
@@ -44,12 +44,14 @@ def calculate_statistics(filenames):
 
 
 moead_files = [
-    f"./result/f/moead/{dts}/moead_{dataset}_{i}.csv"
+    f"./result/f/moead/moead_{dataset}_{i}.csv" #f"./result/f/moead/{dts}/moead_{dataset}_{i}.csv"
     for dataset in datasets
     for i in range(num_runs)
 ]
+
+
 nsga_files = [
-    f"./result/f/nsga/{dts}/nsga_{dataset}_{i}.csv"
+    f"./result/f/nsga/nsga_{dataset}_{i}.csv" #f"./result/f/nsga/{dts}/nsga_{dataset}_{i}.csv"
     for dataset in datasets
     for i in range(num_runs)
 ]

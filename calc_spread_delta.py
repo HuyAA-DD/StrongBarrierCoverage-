@@ -2,8 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 run_start = 0
-run_end = 50
-base_link = "./result/pareto/moead/"
+run_end = 10
+base_link = "./result/pareto/moead/moead_"
 datasets = ["100_1", "150_1", "200_1", "250_1"]
 
 
@@ -46,7 +46,7 @@ spread_values_per_dataset = []
 for dataset in datasets:
     spread_values = []
     for run in range(run_start, run_end):
-        input_file = f"{base_link}{dataset}/{run}.csv"
+        input_file = f"{base_link}{dataset}_{run}.csv"
         pareto_front = np.loadtxt(input_file, dtype=float, delimiter=",")
         spread_value = spread_metric(pareto_front)
         spread_values.append(spread_value)

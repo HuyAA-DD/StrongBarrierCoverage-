@@ -1,7 +1,7 @@
 from operator import index
 import random
 
-N = 100
+N = 300
 barrier_length = 1000
 start_index = 0
 end_index = 10

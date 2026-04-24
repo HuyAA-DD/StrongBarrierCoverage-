@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-dataset = 250
+dataset = 100
 algos = ["moead", "nsga"]
 subset = 7
 

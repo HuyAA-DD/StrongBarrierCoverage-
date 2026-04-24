@@ -43,10 +43,10 @@ for dataset in datasets:
 
         for run in range(run_start, run_end):
             moead_pareto_front = load_data(
-                f"{base_link}/moead/{dataset}/moead_{dataset}_{i}_{run}.csv"
+                f"{base_link}/moead/moead_{dataset}_{i}_{run}.csv"
             )
             nsga_pareto_front = load_data(
-                f"{base_link}/nsga/{dataset}/nsga_{dataset}_{i}_{run}.csv"
+                f"{base_link}/nsga/nsga_{dataset}_{i}_{run}.csv"
             )
 
             norm_moead_pareto_front = normalize(moead_pareto_front, min_vals, max_vals)

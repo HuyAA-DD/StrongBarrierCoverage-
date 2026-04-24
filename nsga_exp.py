@@ -3,11 +3,12 @@ import math
 import time
 import random
 import numpy as np
+import os
 
 if len(sys.argv) > 1:
     dataset = sys.argv[1]
 else:
-    dataset = "100_1"
+    dataset = "300_0"
 
 input_file = f"./dataset/{dataset}.txt"
 print("-nsga", dataset)
@@ -16,14 +17,14 @@ x_corr = np.loadtxt(input_file, dtype=int)
 num_sensor = len(x_corr)
 
 inf = 99999
-pop_size = 32
-max_gen = 10000
-p_mutation = 0.3
-k = 2
+pop_size = 32 # Số lượng cá thể 
+max_gen = 10000 # Số thế hệ tối đa
+p_mutation = 0.3 # Hệ số tiến hóa 
+k = 2 # R_s / R_u
 k_minus_1 = k - 1
-beta = 1
-gamma = 0.5
-barrier_length = 1000
+beta = 1 # Hệ số suy giảm 
+gamma = 0.5 # detection threshold 
+barrier_length = 1000 
 
 run_start = 0
 run_end = 10
@@ -33,6 +34,10 @@ z_nad = [None, None]
 
 
 def mutation(gene):
+    '''
+    Đột biến gene
+    Đảo bit ngẫu nhiên 10 nhiễm sắc thể 
+    '''
     new_gene = gene[:]
     for _ in range(10):
         index = random.randint(0, num_sensor - 1)
@@ -41,6 +46,10 @@ def mutation(gene):
 
 
 def crossover(parent1, parent2):
+    '''
+    lai ghép nhóm 2 bit liên tục trên cặp 
+    cha mẹ parent1, parent2
+    '''
     gap = 2
     child1, child2 = [], []
 
@@ -156,6 +165,9 @@ def radius_formalize(individual):
 
 
 def calc_energy_consumption(r_u):
+    '''
+    Tính lượng năng lượng tiêu thụ với tập bán kính r_u
+    '''
     term1 = 1 / 2 * (k_minus_1 * r_u) ** 2
     exp_beta = math.exp(-beta * r_u)
     term2 = (1 - exp_beta * (1 + beta * r_u)) / (beta**2)
@@ -183,6 +195,9 @@ class Individual:
 
 
 def init_population(pop_size):
+    '''
+    Khởi tạo quần thể 
+    '''
     population = []
     for _ in range(pop_size):
         individual = Individual()
@@ -195,7 +210,7 @@ def init_population(pop_size):
 
 
 def non_dominated_rank(population):
-    n_pop_size = len(population)
+    n_pop_size = len(population) # tại sao không dùng pop_size ?
     ranks = [0] * n_pop_size
     dominating_list = [[] for _ in range(n_pop_size)]
     dominated_count = [0] * n_pop_size
@@ -269,6 +284,12 @@ def calc_crowding_distance(population):
 
 def main():
     for run in range(run_start, run_end, 1):
+
+        path = f"./result/r/nsga/nsga_{dataset}_{run}.txt" #lấy đường dẫn
+        if os.path.exists(path): #Bỏ qua dataset đã chạy rồi
+            print("Skip", dataset, run)
+            continue
+
         print("-nsga run", run)
         time_start = time.time()
 
